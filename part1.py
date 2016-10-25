@@ -11,11 +11,16 @@ def findEdges(vertex_array,threshold):
 	k = KDTree(vertex_array)
 
 	(dists, idxs) = k.query(vertex_array, 2)
-	thresh_d = threshold   #some threshold, equiv to 'd' in O.P.'s code
-	d_slice = dists[:, 1]  #distances to second NN for each point
-	res = np.flatnonzero( d_slice >= thresh_d )
+	print threshold
+	thresh_d = threshold 
+	d_slice = dists[:, 1]
 
-	print res	
+	print d_slice 
+	print type(d_slice)
+	print d_slice.shape 
+	res = np.flatnonzero( d_slice <= thresh_d )
+	print res
+	print res.size	
 
 
 def random_square(N,threshold):
@@ -50,7 +55,7 @@ def random_disk(N,threshold):
 	y = radius * np.cos(theta)
 
 	vertex_array = np.hstack((x,y))
-
+	findEdges(vertex_array,threshold)
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()
@@ -80,7 +85,7 @@ def random_sphere(N,threshold):
 	z = radius * np.cos( theta )
 
 	vertex_array = np.hstack((x,y,z))
-
+	findEdges(vertex_array,threshold)
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection = '3d')
 
@@ -111,11 +116,11 @@ if(test_number > 10):
 else:	
 	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(test_number)
 	if dist_type == 'S':
-		random_square(number_of_nodes,distance_threshold)
+		random_square(number_of_nodes,dist_thres)
 	elif dist_type == 'D':
-		random_disk(number_of_nodes,distance_threshold)
+		random_disk(number_of_nodes,dist_thres)
 	elif dist_type == 'P':
-		random_sphere(number_of_nodes,distance_threshold)
+		random_sphere(number_of_nodes,dist_thres)
 	else:
 		print("Distribution not found")
 
