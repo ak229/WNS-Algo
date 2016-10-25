@@ -20,7 +20,7 @@ def findEdges(vertex_array,threshold):
 	print d_slice.shape 
 	res = np.flatnonzero( d_slice <= thresh_d )
 	print res
-	print res.size	
+	print res.size
 
 
 def random_square(N,threshold):
