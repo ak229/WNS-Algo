@@ -64,7 +64,7 @@ Install the above whls
 
 ### Status
 
-	Generated Pseudo Random Number Generators reading the input from benchmark file
+	Able to identify edges with distances less than threshold
 
 ### Final Points
 
