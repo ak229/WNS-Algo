@@ -23,6 +23,7 @@ This program has the following software requirements:
 	* MatplotLib
 	* Math Library
 	* NetworkX
+	* SciPy
 
 Once python 2.7 or higher has been installed, the next step would be to get **Numpy**, **NetworkX** and **Matplotlib**. 
 
@@ -48,6 +49,10 @@ Once Matplotlib has been installed, we can go ahead and install NetworkX. In ord
 
     pip install networkx
 
+Install SciPy and NumPy using whl
+
+	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/scipy-0.18.1-cp35-cp35m-win_amd64.whl
+	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/numpy-1.11.2+mkl-cp35-cp35m-win_amd64.whl
 
 
 

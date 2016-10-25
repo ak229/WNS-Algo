@@ -3,9 +3,22 @@ import math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import networkx as nx
-
+from scipy.spatial import cKDTree as KDTree
+	
 ### PRNG FOR SQUARE RANDOM ###
-def random_square(N):
+
+def findEdges(vertex_array,threshold):
+	k = KDTree(vertex_array)
+
+	(dists, idxs) = k.query(vertex_array, 2)
+	thresh_d = threshold   #some threshold, equiv to 'd' in O.P.'s code
+	d_slice = dists[:, 1]  #distances to second NN for each point
+	res = np.flatnonzero( d_slice >= thresh_d )
+
+	print res	
+
+
+def random_square(N,threshold):
 	s = np.random.uniform(0,1,(N,2))
 	
 	xarray = [1]
@@ -20,7 +33,7 @@ def random_square(N):
 
 
 	vertex_array = np.vstack((xarray,yarray)).T
-
+	findEdges(vertex_array,threshold)
 
 	plt.plot(xarray,yarray,'ro')
 	plt.axis([-1,2,-1,2])
@@ -29,7 +42,7 @@ def random_square(N):
 
 
 ### PRNG FOR DISK RANDOM ###
-def random_disk(N):
+def random_disk(N,threshold):
 	radius = np.random.uniform(0.0,1.0, (N,1))**(1./2.)
 	theta = np.random.uniform (0.,2., (N,1))*math.pi
 
@@ -37,7 +50,7 @@ def random_disk(N):
 	y = radius * np.cos(theta)
 
 	vertex_array = np.hstack((x,y))
-	
+
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()
@@ -45,7 +58,7 @@ def random_disk(N):
 ### END OF PRNG FOR DISK RANDOM ###
 
 ### PRNG FOR SPHERE RANDOM ###
-def random_sphere(N):
+def random_sphere(N,threshold):
 	radius = np.random.uniform(0.0,1.0, (N,1)) 
 	theta = np.random.uniform(0.,2.,(N,1))*math.pi
 	phi = np.arccos(1-2*np.random.uniform(0.0,1.,(N,1)))
@@ -98,11 +111,11 @@ if(test_number > 10):
 else:	
 	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(test_number)
 	if dist_type == 'S':
-		random_square(number_of_nodes)
+		random_square(number_of_nodes,distance_threshold)
 	elif dist_type == 'D':
-		random_disk(number_of_nodes)
+		random_disk(number_of_nodes,distance_threshold)
 	elif dist_type == 'P':
-		random_sphere(number_of_nodes)
+		random_sphere(number_of_nodes,distance_threshold)
 	else:
 		print("Distribution not found")
 
