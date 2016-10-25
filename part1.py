@@ -30,7 +30,7 @@ def random_square(N):
 
 ### PRNG FOR DISK RANDOM ###
 def random_disk(N):
-	radius = np.random.uniform(0.0,1.0, (N,1))
+	radius = np.random.uniform(0.0,1.0, (N,1))**(1./2.)
 	theta = np.random.uniform (0.,2., (N,1))*math.pi
 
 	x = radius * np.sin(theta)
