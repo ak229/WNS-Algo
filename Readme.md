@@ -64,7 +64,7 @@ Install the above whls
 
 ### Status
 
-	Able to identify edges with distances less than threshold
+	Trying to identify edges with distances less than threshold
 
 ### Final Points
 
