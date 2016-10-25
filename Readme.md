@@ -52,7 +52,8 @@ Once Matplotlib has been installed, we can go ahead and install NetworkX. In ord
 
 
 ### Status
-Generated Pseudo Random Number Generators reading the input from benchmark file
+
+	Generated Pseudo Random Number Generators reading the input from benchmark file
 
 ### Final Points
 
