@@ -37,7 +37,7 @@ def random_disk(N):
 	y = radius * np.cos(theta)
 
 	vertex_array = np.hstack((x,y))
-
+	
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()

@@ -24,6 +24,33 @@ This program has the following software requirements:
 	* Math Library
 	* NetworkX
 
+Once python 2.7 or higher has been installed, the next step would be to get **Numpy**, **NetworkX** and **Matplotlib**. 
+
+In order to install Numpy, you can simply run the following command in Windows: 
+
+    pip install numpy
+
+In case you do not have pip installed in your machine, you can use the steps provided in the following link:
+
+    http://scipy.org/install.html
+
+The above link provides downloads for all the different OSes and the corresponding steps to install them as well. 
+
+Once Numpy has been installed, we can go ahead and install matplotlib. In order to do that, use the following command:
+
+    pip install matplotlib
+
+Again, if you do not have **pip** installed, you can get the package from the following link. 
+
+    http://matplotlib.org/users/installing.html
+
+Once Matplotlib has been installed, we can go ahead and install NetworkX. In order to do that, use the following command:
+
+    pip install networkx
+
+
+
+
 ### Status
 Generated Pseudo Random Number Generators reading the input from benchmark file
 
