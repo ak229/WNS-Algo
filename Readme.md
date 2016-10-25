@@ -51,13 +51,13 @@ Once Matplotlib has been installed, we can go ahead and install NetworkX. In ord
 
 Download SciPy and NumPy using whl
 
-	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/scipy-0.18.1-cp35-cp35m-win_amd64.whl
-	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/numpy-1.11.2+mkl-cp35-cp35m-win_amd64.whl
+	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/scipy-0.18.1-cp27-cp27m-win_amd64.whl
+	http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/numpy-1.11.2+mkl-cp27-cp27m-win_amd64.whl
 
 Install the above whls
 
-	pip install scipy-0.18.1-cp35-cp35m-win_amd64.whl
-	pip install numpy-1.11.2+mkl-cp35-cp35m-win_amd64.whl
+	pip install scipy-0.18.1-cp27-cp27m-win_amd64.whl
+	pip install numpy-1.11.2+mkl-cp27-cp27m-win_amd64.whl
 
 
 
