@@ -112,7 +112,7 @@ def random_disk(N,threshold):
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()
-	return vertex_array
+	return vertex_array,x,y
 
 ### END OF PRNG FOR DISK RANDOM ###
 
@@ -146,7 +146,7 @@ def random_sphere(N,threshold):
 	ax.scatter(x,y,z,'ro')
 
 	plt.show()
-	return vertex_array
+	return vertex_array,x,y,z
 ### END OF PRNG FOR SPHERE RANDOM ###
 
 def read_input(line_number):
@@ -183,5 +183,5 @@ for x in list_test_cases:
 		
 
 	if dist_type == 'P':
-		vertex_array,xarray,yarray = random_sphere(number_of_nodes,dist_thres)	
+		vertex_array,xarray,yarray,zarray = random_sphere(number_of_nodes,dist_thres)	
 		
