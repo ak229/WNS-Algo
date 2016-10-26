@@ -3,21 +3,51 @@ import math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import distance
-	
 
-def findEdges(type_dist,vertex_array,threshold):
+
+
+
+def DegreeDist(list_degreewise_count,max_degree):
+	print "Degree Distribution"
+	list_degrees = []
+	for x in range(0,max_degree):
+		list_degrees.append(list_degreewise_count[x])
+		#print list_degreewise_count[x]
+
+	y = list_degrees
+	N = len(y)
+	x = range(N)
+	width = 1/1.5
+	plt.bar(x,y,width,color='red')
+
+	plt.show()
+
+
+
+def RGGDisplay(vertex_array,xarray,yarray,point_min, point_max, list_max):
+	#Will show minimum point is blue, max point is yellow, neighbours of max are green
+  	plt.plot(xarray,yarray,'ro')
+  	plt.plot([point_min[0]],[point_min[1]],'bo')
+  	plt.plot([point_max[0]],[point_max[1]],'yo')
+  	#Lets plot the edges in green here
+  	for x in list_max:
+  		plt.plot([vertex_array[x][0]],[vertex_array[x][1]],'go')
+	plt.axis([-1,2,-1,2])
+	plt.show()
+
+
+def findEdges(vertex_array,threshold,xarray,yarray):
 	list_of_edgelists = []
 	min_degree = 999999;
 	max_degree = 0;
 	total_pairs = 0;
 	index_min = -1;
-	index_max = -1; 
+	index_max = -1;
 
-
-
-	print "Threshold is "+str(threshold)
-	
 	length_vertex_array = vertex_array.shape[0]
+
+	list_degreewise_count = [0] * length_vertex_array
+
 	for x in range(0,vertex_array.shape[0]-1):
 		list_x = []
 		
@@ -27,6 +57,7 @@ def findEdges(type_dist,vertex_array,threshold):
 		
 		list_of_edgelists.append(list_x)
 		length_zoe = len(list_x)
+		list_degreewise_count[length_zoe] = list_degreewise_count[length_zoe]+1
 		total_pairs = total_pairs + length_zoe
 		if (length_zoe > max_degree):
 			max_degree = length_zoe
@@ -39,12 +70,8 @@ def findEdges(type_dist,vertex_array,threshold):
 	avg_deg = total_pairs/vertex_array.shape[0]
 	
 
-	print "Highest degree is "+str(max_degree)
-	print "Lowest degree is "+str(min_degree)
-	print "Highest degree adjacency list is for "+str(vertex_array[index_max])+" and is "+str(list_of_edgelists[index_max])
-	print "Lowest degree adjacency list is for "+str(vertex_array[index_min])+" and is "+str(list_of_edgelists[index_min])
-	print "Average degree is "+str(avg_deg)
-	print "Number of unique pairwise edges is "+str(total_pairs)	
+	DegreeDist(list_degreewise_count,max_degree)
+	RGGDisplay(vertex_array,xarray,yarray,vertex_array[index_min],vertex_array[index_max],list_of_edgelists[index_max])	
 	return length_vertex_array,total_pairs,threshold,avg_deg	
 	#print list_of_edgelists	
 
@@ -64,12 +91,11 @@ def random_square(N,threshold):
 
 	vertex_array = np.vstack((xarray,yarray)).T
 
-  	"""
-	plt.plot(xarray,yarray,'ro')
+  	plt.plot(xarray,yarray,'ro')
 	plt.axis([-1,2,-1,2])
 	plt.show()
-	"""
-	return vertex_array
+	
+	return vertex_array,xarray,yarray
 ### END OF PRNG FOR SQUARE RANDOM ###
 
 
@@ -83,14 +109,9 @@ def random_disk(N,threshold):
 
 	vertex_array = np.hstack((x,y))
 
-	print vertex_array[0]
-	print vertex_array[0][0]
-	print len(vertex_array)
-	"""
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()
-	"""
 	return vertex_array
 
 ### END OF PRNG FOR DISK RANDOM ###
@@ -143,23 +164,24 @@ def read_input(line_number):
 	return number_of_nodes,avg_degree,distance_threshold,type_of_distribution
 
 
+list_test_cases = [1,2,3,6,7,8,9]
 
+for x in list_test_cases:
+	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(x)
 
-
-test_number = int(raw_input('Enter the Benchmark test you want to run (1-10):'))
-if(test_number > 10):
-	print "Error"
-else:	
-	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(test_number)
 	if dist_type == 'S':
-		vertex_array = random_square(number_of_nodes,dist_thres)	
-		findEdges(1,vertex_array,dist_thres)
-	elif dist_type == 'D':
-		vertex_array = random_disk(number_of_nodes,dist_thres)
-		findEdges(2,vertex_array,dist_thres)
-	elif dist_type == 'P':
-		vertex_array = random_sphere(number_of_nodes,dist_thres)
-		findEdges(3,vertex_array,dist_thres)
-	else:
-		print("Distribution not found")
+		vertex_array,xarray,yarray = random_square(number_of_nodes,dist_thres)
+		if (x == 1 or x == 2 or x == 3):	
+			N,M,R,A = findEdges(vertex_array,dist_thres,xarray,yarray)
+			print "Number of sensors is "+str(N)
+			print "Number of distinct pairwise sensor adjacencies is "+str(M)
+			print "Distance bound for adjacency (Threshold) is "+str(R)
+			print "Average Degree is "+str(A)
 
+	if dist_type == 'D':
+		vertex_array,xarray,yarray = random_disk(number_of_nodes,dist_thres)	
+		
+
+	if dist_type == 'P':
+		vertex_array,xarray,yarray = random_sphere(number_of_nodes,dist_thres)	
+		
