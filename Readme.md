@@ -64,7 +64,7 @@ Install the above whls
 
 ### Status
 
-	Trying to identify edges with distances less than threshold
+	Completed requirements for Project Part 1. Need to improve code to get +15 pts for Linear Algorithms
 
 ### Final Points
 
