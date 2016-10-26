@@ -9,35 +9,25 @@ from scipy.spatial import distance
 ### PRNG FOR SQUARE RANDOM ###
 
 def findEdges(vertex_array,threshold):
+	boolean_list_of_vertices = [False for i in range(vertex_array.shape[0])]
 	list_of_edgelists = []
+
+	
 	for x in range(0,vertex_array.shape[0]-1):
 		list_x = []
 		for y in range(x+1,vertex_array.shape[0]):
-			print vertex_array[x]
-			print vertex_array[y]
+			print "y ka wala in y wala for "+str(y+1)
 			print distance.euclidean(vertex_array[x],vertex_array[y])
-			if(distance.euclidean(vertex_array[x],vertex_array[y]) > 0):  #test and change the threshold value here
-				print "meow"
-				list_x.append(y)
-		list_of_edgelists.append(list_x)
-			
-	print list_of_edgelists	
-"""
-	k = KDTree(vertex_array)
-	print vertex_array
-	res = k.query_ball_point(vertex_array[0],threshold)
+			if(distance.euclidean(vertex_array[x],vertex_array[y]) < threshold):  #test and change the threshold value here
+				print distance.euclidean(vertex_array[x],vertex_array[y])
+				list_x.append(y+1)
 
-	print res
-	
-	
-	(dists, idxs) = k.query(vertex_array, 2)
-	thresh_d = threshold 
-	print idxs
-	d_slice = dists[:, 1]
-	res = d_slice.ravel()[np.flatnonzero( d_slice <= thresh_d )]
-	print res
-	print res.size
-	"""
+		list_of_edgelists.append(list_x)
+
+
+	for x in range(0,vertex_array.shape[0]-1):
+		print list_of_edgelists[x]
+		
 
 def random_square(N,threshold):
 	s = np.random.uniform(0,1,(N,2))
