@@ -2,49 +2,58 @@ import numpy as np
 import math 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import networkx as nx
-from scipy.spatial import cKDTree as KDTree
 from scipy.spatial import distance
 	
-### PRNG FOR SQUARE RANDOM ###
 
-def findEdges(vertex_array,threshold):
+def findEdges(type_dist,vertex_array,threshold):
 	list_of_edgelists = []
+	min_degree = 999999;
+	max_degree = 0;
+	total_pairs = 0;
+	index_min = -1;
+	index_max = -1; 
+
+
+
+	print "Threshold is "+str(threshold)
+	
+	length_vertex_array = vertex_array.shape[0]
 	for x in range(0,vertex_array.shape[0]-1):
 		list_x = []
+		
 		for y in range(x+1,vertex_array.shape[0]):
-			print vertex_array[x]
-			print vertex_array[y]
-			print distance.euclidean(vertex_array[x],vertex_array[y])
-			if(distance.euclidean(vertex_array[x],vertex_array[y]) > 0):  #test and change the threshold value here
-				print "meow"
+			if(distance.euclidean(vertex_array[x],vertex_array[y]) < threshold):  #test and change the threshold value here
 				list_x.append(y)
+		
 		list_of_edgelists.append(list_x)
-			
-	print list_of_edgelists	
-"""
-	k = KDTree(vertex_array)
-	print vertex_array
-	res = k.query_ball_point(vertex_array[0],threshold)
+		length_zoe = len(list_x)
+		total_pairs = total_pairs + length_zoe
+		if (length_zoe > max_degree):
+			max_degree = length_zoe
+			index_max = x
 
-	print res
-	
-	
-	(dists, idxs) = k.query(vertex_array, 2)
-	thresh_d = threshold 
-	print idxs
-	d_slice = dists[:, 1]
-	res = d_slice.ravel()[np.flatnonzero( d_slice <= thresh_d )]
-	print res
-	print res.size
-	"""
+		if (length_zoe < min_degree):
+			min_degree = length_zoe
+			index_min = x
 
+	avg_deg = total_pairs/vertex_array.shape[0]
+	
+
+	print "Highest degree is "+str(max_degree)
+	print "Lowest degree is "+str(min_degree)
+	print "Highest degree adjacency list is for "+str(vertex_array[index_max])+" and is "+str(list_of_edgelists[index_max])
+	print "Lowest degree adjacency list is for "+str(vertex_array[index_min])+" and is "+str(list_of_edgelists[index_min])
+	print "Average degree is "+str(avg_deg)
+	print "Number of unique pairwise edges is "+str(total_pairs)	
+	return length_vertex_array,total_pairs,threshold,avg_deg	
+	#print list_of_edgelists	
+
+### PRNG FOR SQUARE RANDOM ###
 def random_square(N,threshold):
 	s = np.random.uniform(0,1,(N,2))
 	
 	xarray = [1]
 	yarray = [1]
-
 	xarray.remove(1)
 	yarray.remove(1)
 
@@ -54,11 +63,13 @@ def random_square(N,threshold):
 
 
 	vertex_array = np.vstack((xarray,yarray)).T
-	findEdges(vertex_array,threshold)
 
+  	"""
 	plt.plot(xarray,yarray,'ro')
 	plt.axis([-1,2,-1,2])
 	plt.show()
+	"""
+	return vertex_array
 ### END OF PRNG FOR SQUARE RANDOM ###
 
 
@@ -71,10 +82,16 @@ def random_disk(N,threshold):
 	y = radius * np.cos(theta)
 
 	vertex_array = np.hstack((x,y))
-	findEdges(vertex_array,threshold)
+
+	print vertex_array[0]
+	print vertex_array[0][0]
+	print len(vertex_array)
+	"""
 	plt.plot(x,y,'ro')
 	plt.axis([-1,1,-1,1])
 	plt.show()
+	"""
+	return vertex_array
 
 ### END OF PRNG FOR DISK RANDOM ###
 
@@ -101,13 +118,14 @@ def random_sphere(N,threshold):
 	z = radius * np.cos( theta )
 
 	vertex_array = np.hstack((x,y,z))
-	findEdges(vertex_array,threshold)
+
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection = '3d')
 
 	ax.scatter(x,y,z,'ro')
 
 	plt.show()
+	return vertex_array
 ### END OF PRNG FOR SPHERE RANDOM ###
 
 def read_input(line_number):
@@ -134,12 +152,14 @@ if(test_number > 10):
 else:	
 	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(test_number)
 	if dist_type == 'S':
-		random_square(number_of_nodes,dist_thres)
+		vertex_array = random_square(number_of_nodes,dist_thres)	
+		findEdges(1,vertex_array,dist_thres)
 	elif dist_type == 'D':
-		random_disk(number_of_nodes,dist_thres)
+		vertex_array = random_disk(number_of_nodes,dist_thres)
+		findEdges(2,vertex_array,dist_thres)
 	elif dist_type == 'P':
-		random_sphere(number_of_nodes,dist_thres)
+		vertex_array = random_sphere(number_of_nodes,dist_thres)
+		findEdges(3,vertex_array,dist_thres)
 	else:
 		print("Distribution not found")
-
 
