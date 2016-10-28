@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import distance
 
+<<<<<<< HEAD
+def findEdges(vertex_array,threshold):
+	boolean_list_of_vertices = [False for i in range(vertex_array.shape[0])]
+	list_of_edgelists = []
+
+	
+=======
 
 def determine_location(number_of_rows,poitn):
 
@@ -72,13 +79,17 @@ def findEdges(vertex_array,threshold,xarray,yarray):
 
 	list_degreewise_count = [0] * length_vertex_array
 
+
 	for x in range(0,vertex_array.shape[0]-1):
 		list_x = []
 		
 		for y in range(x+1,vertex_array.shape[0]):
+			print "y ka wala in y wala for "+str(y+1)
+			print distance.euclidean(vertex_array[x],vertex_array[y])
 			if(distance.euclidean(vertex_array[x],vertex_array[y]) < threshold):  #test and change the threshold value here
-				list_x.append(y)
-		
+				print distance.euclidean(vertex_array[x],vertex_array[y])
+				list_x.append(y+1)
+
 		list_of_edgelists.append(list_x)
 		length_zoe = len(list_x)
 		list_degreewise_count[length_zoe] = list_degreewise_count[length_zoe]+1
