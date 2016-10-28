@@ -4,13 +4,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import distance
 
-<<<<<<< HEAD
-def findEdges(vertex_array,threshold):
-	boolean_list_of_vertices = [False for i in range(vertex_array.shape[0])]
-	list_of_edgelists = []
-
-	
-=======
 
 def determine_location(number_of_rows,poitn):
 
