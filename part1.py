@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import distance
 
 
+def determine_location(number_of_rows,poitn):
 
 
 def DegreeDist(list_degreewise_count,max_degree):
@@ -23,6 +24,21 @@ def DegreeDist(list_degreewise_count,max_degree):
 	plt.show()
 
 
+def addToDivisions(vertex_array,threshold,xarray,yarray):
+	number_of_rows = math.ceil(1/threshold)
+	number_of_columns = number_of_rows
+	number_of_divs = number_of_rows * number_of_columns
+
+	division_vertex_list = []   #index in division matrix/index in vertex_array    IDM = number_of_columns*(vertex_array[IDV][0]/threshold)
+
+
+	for pt in range(0,vertex_array.shape[0]):
+		loca = determine_location(number_of_rows,vertex_array[pt])
+		division_vertex_list[loca].append(2)
+
+
+
+	return number_of_divs
 
 def RGGDisplay(vertex_array,xarray,yarray,point_min, point_max, list_max):
 	#Will show minimum point is blue, max point is yellow, neighbours of max are green
@@ -36,7 +52,15 @@ def RGGDisplay(vertex_array,xarray,yarray,point_min, point_max, list_max):
 	plt.show()
 
 
+def findEdgesLinear(vertex_array,threshold,xarray,yarray):
+	division_vertex_list = addToDivisions(vertex_array,threshold)
+	print division_vertex_list
+	N,M,R,A = findEdges(vertex_array,threshold,xarray,yarray)
+	return N,M,R,A
+	
+
 def findEdges(vertex_array,threshold,xarray,yarray):
+
 	list_of_edgelists = []
 	min_degree = 999999;
 	max_degree = 0;
@@ -164,7 +188,7 @@ def read_input(line_number):
 	return number_of_nodes,avg_degree,distance_threshold,type_of_distribution
 
 
-list_test_cases = [1,2,3,6,7,8,9]
+list_test_cases = [1]
 
 for x in list_test_cases:
 	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(x)
@@ -172,7 +196,7 @@ for x in list_test_cases:
 	if dist_type == 'S':
 		vertex_array,xarray,yarray = random_square(number_of_nodes,dist_thres)
 		if (x == 1 or x == 2 or x == 3):	
-			N,M,R,A = findEdges(vertex_array,dist_thres,xarray,yarray)
+			N,M,R,A = findEdgesLinear(vertex_array,dist_thres,xarray,yarray)
 			print "Number of sensors is "+str(N)
 			print "Number of distinct pairwise sensor adjacencies is "+str(M)
 			print "Distance bound for adjacency (Threshold) is "+str(R)
