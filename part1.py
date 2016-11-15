@@ -4,8 +4,24 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import distance
 
+def determine_location(number_of_rows,poitn,threshold,type_d):
+	if(type_d == 'S'):
+		x_value_location = math.floor(poitn[0]/threshold)
+		y_value_location = math.floor(poitn[1]/threshold)
+		location_value = y_value_location*number_of_rows+x_value_location+1
 
-def determine_location(number_of_rows,poitn):
+	if(type_d == 'D'):
+		x_value_location = math.floor(poitn[0]/threshold)
+		y_value_location = math.floor(poitn[1]/threshold)
+		location_value = y_value_location*number_of_rows+x_value_location+1
+
+	if(type_d == 'P'):
+		x_value_location = math.floor(poitn[0]/threshold)
+		y_value_location = math.floor(poitn[1]/threshold)
+		z_value_location = math.floor(poitn[2]/threshold)
+		location_value = y_value_location*number_of_rows+x_value_location+1
+
+	return int(location_value)
 
 
 def DegreeDist(list_degreewise_count,max_degree):
@@ -23,23 +39,20 @@ def DegreeDist(list_degreewise_count,max_degree):
 
 	plt.show()
 
-
-def addToDivisions(vertex_array,threshold,xarray,yarray):
-	number_of_rows = math.ceil(1/threshold)
+#Needs Revisions
+def addToDivisions(vertex_array,threshold,xarray,yarray,type_d):
+	number_of_rows = int(math.ceil(1/threshold))
 	number_of_columns = number_of_rows
 	number_of_divs = number_of_rows * number_of_columns
 
-	division_vertex_list = []   #index in division matrix/index in vertex_array    IDM = number_of_columns*(vertex_array[IDV][0]/threshold)
+	list_division_meow = [[] for i in range(number_of_divs+1)]
+	for x in range(0,vertex_array.shape[0]):
+		location_number = determine_location(number_of_rows,vertex_array[x],threshold,type_d)
+		list_division_meow[int(location_number)].append(x)
 
+	return list_division_meow
 
-	for pt in range(0,vertex_array.shape[0]):
-		loca = determine_location(number_of_rows,vertex_array[pt])
-		division_vertex_list[loca].append(2)
-
-
-
-	return number_of_divs
-
+#Needs sphere revision
 def RGGDisplay(vertex_array,xarray,yarray,point_min, point_max, list_max):
 	#Will show minimum point is blue, max point is yellow, neighbours of max are green
   	plt.plot(xarray,yarray,'ro')
@@ -51,17 +64,78 @@ def RGGDisplay(vertex_array,xarray,yarray,point_min, point_max, list_max):
 	plt.axis([-1,2,-1,2])
 	plt.show()
 
-
-def findEdgesLinear(vertex_array,threshold,xarray,yarray):
-	division_vertex_list = addToDivisions(vertex_array,threshold)
-	print division_vertex_list
-	N,M,R,A = findEdges(vertex_array,threshold,xarray,yarray)
-	return N,M,R,A
+def bigon2Edges(vertex_array,adj_list_final,pos,threshold):
+	adj_list_temporary = adj_list_final
+	point = vertex_array[pos]
 	
+	print "Adj list leng in bigon2Edg is "+str(len(adj_list_final))
+	print "initial adj list is "+str(adj_list_temporary)
 
-def findEdges(vertex_array,threshold,xarray,yarray):
+	for i in range(len(adj_list_final)-1):
+		print "i is "+str(i)
+		if(distance.euclidean(point,vertex_array[i]) > threshold):
+			print "distance is "+str(distance.euclidean(point,vertex_array[i]))+" and threshold is "+str(threshold)
+			print "ADJ I is "+str(adj_list_final[i])
+			adj_list_temporary.remove(adj_list_final[i])
 
-	list_of_edgelists = []
+	print "adj_lis in bigon2 is"
+	print adj_list_temporary
+	return 0;
+
+#Needs Revision
+def findEdges(vertex_array,point,pos,division_vertex_list,number_of_rows,threshold,type_d):
+	adj_list = []
+
+	my_location = determine_location(number_of_rows,point,threshold,type_d)
+	adj_list.append(division_vertex_list[my_location])
+
+	list_of_locations = []
+
+	for x in range(1,number_of_rows**2 + 1):
+		list_of_locations.append(x)
+
+	if(my_location+number_of_rows-1 in list_of_locations and my_location%number_of_rows !=0):
+		adj_list.append(division_vertex_list[my_location+number_of_rows-1])
+
+	if(my_location+number_of_rows+1 in list_of_locations and my_location%number_of_rows !=1):
+		adj_list.append(division_vertex_list[my_location+number_of_rows+1])
+
+	if(my_location-number_of_rows+1 in list_of_locations and my_location%number_of_rows !=1):
+		adj_list.append(division_vertex_list[my_location-number_of_rows+1])
+
+	if(my_location-number_of_rows-1 in list_of_locations  and my_location%number_of_rows !=0):
+		adj_list.append(division_vertex_list[my_location-number_of_rows-1])
+
+	if(my_location+1 in list_of_locations and my_location%number_of_rows != 0):
+		adj_list.append(division_vertex_list[my_location+1])
+
+	if(my_location-1 in list_of_locations and my_location%number_of_rows != 1):
+		adj_list.append(division_vertex_list[my_location-1])
+
+	if(my_location+number_of_rows in list_of_locations):
+		adj_list.append(division_vertex_list[my_location+number_of_rows])
+
+	if(my_location-number_of_rows in list_of_locations):
+		adj_list.append(division_vertex_list[my_location-number_of_rows])
+
+	adj_list_final = []
+	map(adj_list_final.extend,adj_list)
+	#print adj_list_final
+
+	adj_list_final.remove(pos)
+	adj_list_final.sort()
+
+	print "In find edges length of adj_list_final is "+str(len(adj_list_final))
+
+	adj_list_cleared = bigon2Edges(vertex_array,adj_list_final,pos,threshold)
+
+	return adj_list_final
+
+#needs revision
+def findEdgesLinear(vertex_array,threshold,xarray,yarray,type_d):
+	division_vertex_list = addToDivisions(vertex_array,threshold,xarray,yarray,type_d)
+	number_of_rows = int(math.ceil(1/threshold))
+	adj_list_linear = []
 	min_degree = 999999;
 	max_degree = 0;
 	total_pairs = 0;
@@ -72,36 +146,40 @@ def findEdges(vertex_array,threshold,xarray,yarray):
 
 	list_degreewise_count = [0] * length_vertex_array
 
+	for z in range(vertex_array.shape[0]):
+		adj_list_inst = findEdges(vertex_array,vertex_array[z],z,division_vertex_list,number_of_rows,threshold,type_d)
+		print "result of adj_list_inst for "+str(z)+" is "
+		print adj_list_inst
+		adj_list_linear.append(adj_list_inst)
 
-	for x in range(0,vertex_array.shape[0]-1):
-		list_x = []
-		
-		for y in range(x+1,vertex_array.shape[0]):
-			print "y ka wala in y wala for "+str(y+1)
-			print distance.euclidean(vertex_array[x],vertex_array[y])
-			if(distance.euclidean(vertex_array[x],vertex_array[y]) < threshold):  #test and change the threshold value here
-				print distance.euclidean(vertex_array[x],vertex_array[y])
-				list_x.append(y+1)
+		print adj_list_linear[z]
 
-		list_of_edgelists.append(list_x)
-		length_zoe = len(list_x)
+		length_zoe = len(adj_list_inst)
 		list_degreewise_count[length_zoe] = list_degreewise_count[length_zoe]+1
 		total_pairs = total_pairs + length_zoe
 		if (length_zoe > max_degree):
 			max_degree = length_zoe
-			index_max = x
+			index_max = z
 
 		if (length_zoe < min_degree):
 			min_degree = length_zoe
-			index_min = x
+			index_min = z
 
 	avg_deg = total_pairs/vertex_array.shape[0]
-	
-
+	print "List_degree"
+	print list_degreewise_count
 	DegreeDist(list_degreewise_count,max_degree)
-	RGGDisplay(vertex_array,xarray,yarray,vertex_array[index_min],vertex_array[index_max],list_of_edgelists[index_max])	
+	print index_min
+	print index_max
+	print "Vertex Array min"
+	print vertex_array[index_min]
+	print "Vertex Array max"
+	print vertex_array[index_max]
+	print "Adj Lst Linear"
+	print adj_list_linear[index_max]
+	RGGDisplay(vertex_array,xarray,yarray,vertex_array[index_min],vertex_array[index_max],adj_list_linear[index_max])
 	return length_vertex_array,total_pairs,threshold,avg_deg	
-	#print list_of_edgelists	
+
 
 ### PRNG FOR SQUARE RANDOM ###
 def random_square(N,threshold):
@@ -192,19 +270,13 @@ def read_input(line_number):
 	return number_of_nodes,avg_degree,distance_threshold,type_of_distribution
 
 
-list_test_cases = [1]
+list_test_cases = [2]
 
 for x in list_test_cases:
 	number_of_nodes,avg_degree,dist_thres,dist_type = read_input(x)
 
 	if dist_type == 'S':
 		vertex_array,xarray,yarray = random_square(number_of_nodes,dist_thres)
-		if (x == 1 or x == 2 or x == 3):	
-			N,M,R,A = findEdgesLinear(vertex_array,dist_thres,xarray,yarray)
-			print "Number of sensors is "+str(N)
-			print "Number of distinct pairwise sensor adjacencies is "+str(M)
-			print "Distance bound for adjacency (Threshold) is "+str(R)
-			print "Average Degree is "+str(A)
 
 	if dist_type == 'D':
 		vertex_array,xarray,yarray = random_disk(number_of_nodes,dist_thres)	
@@ -212,4 +284,21 @@ for x in list_test_cases:
 
 	if dist_type == 'P':
 		vertex_array,xarray,yarray,zarray = random_sphere(number_of_nodes,dist_thres)	
-		
+
+
+	N,M,R,A = findEdgesLinear(vertex_array,dist_thres,xarray,yarray,'S')
+	print "Number of sensors is "+str(N)
+	print "Number of distinct pairwise sensor adjacencies is "+str(M)
+	print "Distance bound for adjacency (Threshold) is "+str(R)
+	print "Average Degree is "+str(A)
+
+
+
+
+
+
+
+
+
+
+
